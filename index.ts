@@ -19,11 +19,20 @@ form.onsubmit = async (e) => {
 
   list.innerHTML = '';
 
+  // Add a class to the li elements that we're creating
   data[0].meanings.forEach((element: any) => {
     const li = document.createElement('li');
+    li.classList.add('definition');
     li.innerText = `${element.partOfSpeech} - ${element.definitions[0].definition}`;
     list.appendChild(li);
   });
+  
+  // Create another li element for the word being defined
+  const wordLi = document.createElement('li');
+  wordLi.classList.add('word');
+  wordLi.innerText = text;
+  list.insertBefore(wordLi, list.firstChild);
+
 } catch(err){
   console.log(err);
 }
