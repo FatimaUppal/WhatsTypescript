@@ -1,44 +1,28 @@
-// require("./style.css");
-// get form from element html for reference and preform manipulation
-const form : HTMLFormElement = document.querySelector('#defineform')!;
+const form: HTMLFormElement = document.querySelector('#defineform')!;
 const list: HTMLUListElement = document.querySelector('.list-unstyled')!;
-const header: HTMLHeadingElement = document.querySelector('h1')!; 
+const header: HTMLHeadingElement = document.querySelector('h1')!;
 
-form.onsubmit = async (e) => {
-  e.preventDefault();
-  
-  const formData = new FormData(form);
-  //console.log(formData);
-  const text = formData.get('defineword') as string;
+form.onsubmit = async (event) => {
+  event.preventDefault();
 
-  try{
-  const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en_US/${text}`);
-  const data = await response.json();
+  const formData = new FormData(form); // forma data from form
+  const text = formData.get('defineword') as string; // get the word user input
 
-  header.innerText = text;
+  try {
+    const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${text}`);
+    const data = await response.json();
 
-  list.innerHTML = '';
+    header.innerText = text;
 
-  // Add a class to the li elements that we're creating
-  data[0].meanings.forEach((element: any) => {
-    const li = document.createElement('li');
-    li.classList.add('definition');
-    li.innerText = `${element.partOfSpeech} - ${element.definitions[0].definition}`;
-    list.appendChild(li);
-  });
-  
-  // Create another li element for the word being defined
-  const wordLi = document.createElement('li');
-  wordLi.classList.add('word');
-  wordLi.innerText = text;
-  list.insertBefore(wordLi, list.firstChild);
-
-} catch(err){
-  console.log(err);
-}
-
-
-  return false; // prevent reload
+    list.innerHTML = '';
+    data[0].meanings.forEach((meaning: any) => {
+      const li = document.createElement('li');
+      li.innerText = `${meaning.partOfSpeech} - ${meaning.definitions[0].definition}`;
+      list.appendChild(li);
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 

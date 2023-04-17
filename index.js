@@ -9,30 +9,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// require("./style.css");
-// get form from element html for reference and preform manipulation
 const form = document.querySelector('#defineform');
 const list = document.querySelector('.list-unstyled');
 const header = document.querySelector('h1');
-form.addEventListener('submit', (event) => __awaiter(void 0, void 0, void 0, function* () {
+form.onsubmit = (event) => __awaiter(void 0, void 0, void 0, function* () {
     event.preventDefault();
-    const formData = new FormData(form);
-    const text = formData.get('defineword');
+    const formData = new FormData(form); // forma data from form
+    const text = formData.get('defineword'); // get the word user input
     try {
-        const response = yield fetch(`https://api.dictionaryapi.dev/api/v2/entries/en_US/${text}`);
+        const response = yield fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${text}`);
         const data = yield response.json();
         header.innerText = text;
-        const wordListItem = document.createElement('li');
-        wordListItem.innerText = text;
-        list.appendChild(wordListItem);
-        data[0].meanings.forEach((element) => {
+        list.innerHTML = '';
+        data[0].meanings.forEach((meaning) => {
             const li = document.createElement('li');
-            li.innerText = `${element.partOfSpeech} - ${element.definitions[0].definition}`;
+            li.innerText = `${meaning.partOfSpeech} - ${meaning.definitions[0].definition}`;
             list.appendChild(li);
         });
     }
-    catch (err) {
-        console.log(err);
+    catch (error) {
+        console.log(error);
     }
-}));
+});
 //# sourceMappingURL=index.js.map
